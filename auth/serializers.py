@@ -1,26 +1,25 @@
-from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
+from rest_framework import serializers
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['email'] = user.email
-        token['name'] = user.get_full_name()
-        return token
-
     def validate(self, attrs):
-        email = attrs.get('email')
         username = attrs.get('username')
+        email = attrs.get('email')
         password = attrs.get('password')
 
-        if not (email or username) or not password:
+        if not (username or email) or not password:
             raise serializers.ValidationError(
                 {'non_field_errors': ['Email yoki username va parolni kiriting.']}
             )
 
-        user = authenticate(request=self.context.get('request'), username=username, email=email, password=password)
+        # Foydalanuvchini autentifikatsiya qilish: email yoki username orqali
+        user = None
+        if username:
+            user = authenticate(username=username, password=password)
+        if not user and email:
+            user = authenticate(username=email, password=password)  # Foydalanuvchi email orqali autentifikatsiya qilinadi
+
         if user is None:
             raise serializers.ValidationError(
                 {'non_field_errors': ['Email/username yoki parol noto‘g‘ri.']}
@@ -28,6 +27,3 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         validated_data = super().validate(attrs)
         return validated_data
-
-class UserSerializer(serializers.Serializer):
-    access_token = serializers.CharField()

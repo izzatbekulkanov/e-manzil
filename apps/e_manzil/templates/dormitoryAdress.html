@@ -21,9 +21,46 @@
   <link rel="stylesheet" href="{% static 'vendor/libs/@form-validation/form-validation.css' %}" />
 
   <style>
-    .dormitory-basic {
-      table-layout: auto;
-    }
+      .dormitory-basic {
+          table-layout: auto;
+      }
+      /* Jadvalga yanada iOS-ga o'xshash ko'rinish berish uchun */
+      .card {
+          background-color: #f8f9fa; /* Yengil fon rangi */
+          border-radius: 15px; /* Yumaloq burchaklar */
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Yengil soyalar */
+      }
+
+      /* Header (thead) uchun */
+      .dormitory-basic thead th {
+          background-color: #f0f0f5; /* Yengil kulrang rang */
+          color: #333; /* Matn rangini aniqroq qilish */
+          font-weight: 500; /* O'rtacha qalinlik */
+          text-align: center;
+          border-bottom: 2px solid #dee2e6;
+      }
+
+      /* Hover effekti */
+      .dormitory-basic tbody tr:hover {
+          background-color: #e9ecef; /* Hover paytida yengil rang o'zgarishi */
+      }
+
+      /* Jadval hujayralari uchun */
+      .dormitory-basic td, .dormitory-basic th {
+          padding: 15px; /* Kengroq padding */
+          border-top: none; /* Hujayralar orasida ortiqcha chiziq yo'q qilish */
+      }
+
+      /* Mobil dizayn uchun */
+      @media (max-width: 768px) {
+          .dormitory-basic {
+              font-size: 0.9rem; /* Matnni biroz kichikroq qilish */
+          }
+
+          .card {
+              border-radius: 10px; /* Yumaloq burchaklarni biroz kamaytirish */
+          }
+      }
   </style>
 {% endblock vendor_css %}
 
@@ -57,20 +94,23 @@
       <h5 class="card-title">Talabalar turar joylari</h5>
       <button class="btn btn-primary btn-add-record" id="add-record-button">Add New Record</button>
     </div>
-    <div class="card-datatable table-responsive pt-0">
-      <table class="dormitory-basic table">
-        <thead>
-        <tr>
-          <th>TR</th>
-          <th>Yotoqhona</th>
-          <th>Tavfsif</th>
-          <th>Holati</th>
-          <th>Harakat</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
+    <div class="card shadow-sm rounded-3 border-0 overflow-hidden">
+        <div class="card-datatable table-responsive pt-0">
+            <table class="dormitory-basic table table-striped table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-center py-3">TR</th>
+                        <th class="text-center py-3">Yotoqhona</th>
+                        <th class="text-center py-3">Tavfsif</th>
+                        <th class="text-center py-3">Holati</th>
+                        <th class="text-center py-3">Harakat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ma'lumotlar qo'shiladi -->
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="card-footer d-flex justify-content-between">
       <div class="dataTables_info"></div>
@@ -120,12 +160,14 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
+    // Funksiya: Cookie qiymatini olish
     function getCookie(name) {
       let cookieValue = null;
       if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
           const cookie = cookies[i].trim();
+          // Cookie nomi bilan moslikni tekshirish
           if (cookie.substring(0, name.length + 1) === (name + '=')) {
             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
             break;
@@ -134,56 +176,68 @@
       }
       return cookieValue;
     }
-  </script>
-  <script>
+
+    // Document tayyor bo'lganda ishga tushadi
     $(document).ready(function() {
+      // DataTable o'rnatish
       var table = $('.dormitory-basic').DataTable({
         ajax: {
-          url: '/api/dormitory-address/',
+          url: '/api/dormitory-address/', // Ma'lumotlar olish uchun API manzili
           dataSrc: ''
         },
         columns: [
           {
-            data: null,
+            data: null, // Satr raqami uchun
             orderable: false,
             searchable: false,
             render: function(data, type, row, meta) {
-              return meta.row + 1;
+              return meta.row + 1; // Har bir satrning raqami
             }
           },
-          { data: 'address' },
-          { data: 'description' },
-          { data: 'is_active' },
+          { data: 'address' }, // Manzil
+          { data: 'description' }, // Qo'shimcha tavsif
+          {
+            data: 'is_active',
+            render: function(data) {
+                // Faol yoki nofaol holati uchun Bootstrap yorliq
+                if (data) {
+                    return '<span class="badge bg-success">Faol</span>'; // Faol bo'lsa yashil yorliq
+                } else {
+                    return '<span class="badge bg-danger">Nofaol</span>'; // Nofaol bo'lsa qizil yorliq
+                }
+            }
+          },
           {
             data: null,
             orderable: false,
             searchable: false,
             render: function() {
+              // Har bir satr uchun amal tugmachalari
               return `
-                        <div class="d-inline-block">
-                            <a href="javascript:;" class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                <i class="ti ti-dots-vertical ti-md"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end m-0">
-                                <li><a href="javascript:;" class="dropdown-item edit-record">Tahrirlash</a></li>
-                                <li><a href="javascript:;" class="dropdown-item delete-record">O'chirish</a></li>
-                            </ul>
-                        </div>`;
+              <div class="d-inline-block">
+                <a href="javascript:;" class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ti ti-dots-vertical ti-md"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end m-0">
+                  <li><a href="javascript:;" class="dropdown-item edit-record">Tahrirlash</a></li>
+                  <li><a href="javascript:;" class="dropdown-item delete-record">O'chirish</a></li>
+                </ul>
+              </div>`;
             }
           }
         ],
         autoWidth: true,
         dom: '<"row mb-2"<"col-sm-12 col-md-6 d-flex justify-content-start"B><"col-sm-12 col-md-6 d-flex justify-content-end"f>>t<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7 d-flex justify-content-end"p>>',
         buttons: [
-          { extend: 'copy', className: 'btn btn-outline-primary' },
-          { extend: 'excel', className: 'btn btn-outline-success' },
-          { extend: 'csv', className: 'btn btn-outline-info' },
-          { extend: 'pdf', className: 'btn btn-outline-danger' },
-          { extend: 'print', className: 'btn btn-outline-secondary border' }
+          { extend: 'copy', className: 'btn btn-outline-primary border' }, // Copy button
+          { extend: 'excel', className: 'btn btn-outline-success border' }, // Excel button
+          { extend: 'csv', className: 'btn btn-outline-info border' }, // CSV button
+          { extend: 'pdf', className: 'btn btn-outline-danger border' }, // PDF button
+          { extend: 'print', className: 'btn btn-outline-secondary border' } // Print button
         ]
       });
 
-      // Utility functions
+      // Funksiya: Toaster orqali xabar ko'rsatish
       function showToast(message, title = '', type = 'info') {
         toastr[type](message, title, {
           positionClass: 'toast-top-right',
@@ -193,36 +247,40 @@
         });
       }
 
+      // Funksiya: AJAX so'rovi uchun umumiy kod
       function handleAjaxRequest(url, method, data, onSuccess, onError) {
+        // Bloklash animatsiyasi (foydalanuvchi kutayotgan vaqtda)
         $.blockUI({
           message: '<div class="spinner-border text-white" role="status"></div>',
           css: { backgroundColor: 'transparent', border: '0' },
           overlayCSS: { opacity: 0.7 }
         });
 
+        // AJAX so'rovini amalga oshirish
         $.ajax({
           url: url,
           method: method,
           data: data,
           headers: {
-            'X-CSRFToken': getCookie('csrftoken') // Add CSRF token here
+            'X-CSRFToken': getCookie('csrftoken') // CSRF token qo'shish
           },
           success: function(response) {
-            $.unblockUI();
-            onSuccess(response);
+            $.unblockUI(); // Bloklashni olib tashlash
+            onSuccess(response); // Muvaffaqiyatli javobni qayta ishlash
           },
           error: function(xhr, status, error) {
-            $.unblockUI();
-            onError(xhr, status, error);
+            $.unblockUI(); // Bloklashni olib tashlash
+            onError(xhr, status, error); // Xatolikni qayta ishlash
           }
         });
       }
 
-      // Record add
+      // Yangi yozuv qo'shish tugmachasi bosilganda
       $('#add-record-button').click(function() {
         $('#add-new-record').offcanvas('show');
       });
 
+      // O'chirish tugmachasi bosilganda
       $('.dormitory-basic').on('click', '.delete-record', function() {
         let rowData = table.row($(this).parents('tr')).data();
 
@@ -235,11 +293,10 @@
           cancelButtonColor: '#d33',
           confirmButtonText: 'O\'chirish'
         }).then((result) => {
-          console.log(rowData)
           if (result.isConfirmed) {
             handleAjaxRequest(`/api/dormitory-address/${rowData.id}/`, 'DELETE', {}, function() {
-              table.ajax.reload(null, false);
-              showToast('Yoqilgan talabalar turar joyi muvaffaqiyatli o\'chirildi!', 'Success', 'success');
+              table.ajax.reload(null, false); // Jadvalni yangilash
+              showToast('Yotoqxona manzili muvaffaqiyatli o\'chirildi!', 'Success', 'success');
             }, function(xhr) {
               showToast('Xatolik yuz berdi!', 'Error', 'error');
             });
@@ -247,19 +304,20 @@
         });
       });
 
+      // Yangi yozuv qo'shish formasi yuborilganda
       $('#form-add-new-record').submit(function(e) {
         e.preventDefault();
         let formData = $(this).serialize();
         handleAjaxRequest('/api/add-dormitory-address/', 'POST', formData, function(response) {
-          table.ajax.reload(null, false);
-          showToast('Yangi talabalar turar joyi muvaffaqiyatli qo\'shildi!', 'Success', 'success');
-          $('#add-new-record').offcanvas('hide');
+          table.ajax.reload(null, false); // Jadvalni yangilash
+          showToast('Yangi yotoqxona manzili muvaffaqiyatli qo\'shildi!', 'Success', 'success');
+          $('#add-new-record').offcanvas('hide'); // Formani yopish
         }, function(xhr) {
           showToast('Xatolik yuz berdi!', 'Error', 'error');
         });
       });
-
     });
   </script>
+
 
 {% endblock content %}

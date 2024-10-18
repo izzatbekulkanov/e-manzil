@@ -4,7 +4,7 @@ from django.urls import path
 from api.apps_api.data_hemis import UpdateUniversityView, SaveHemisKeyView, UniversityWithApiTokenView, \
     delete_university_api_token, SetUniversityActiveView, DataFetchAndSaveView, UniversityDataView
 from api.apps_api.e_manzil import DormitoryAddressList, add_dormitory_address, DormitoryAddressDeleteView, \
-    AddBuildingView, BuildingFloorDataView, AddFloorView, FloorRoomsView, RoomCreateView
+    AddBuildingView, BuildingFloorDataView, AddFloorView, FloorRoomsView, DeleteFloorView, DeleteBuildingView
 
 data = [
     # boshqa yo'riqnomalar
@@ -25,10 +25,12 @@ e_manzil = [
 
 
     path('add-buildings/', AddBuildingView.as_view(), name='add-building'),
+    path('delete-buildings/', DeleteBuildingView.as_view(), name='delete-building'),
     path('building-floor-data/', BuildingFloorDataView.as_view(), name='building-floor-data'),
+
     path('add-floor/', AddFloorView.as_view(), name='add_new_floor'),
+    path('delete-floor/', DeleteFloorView.as_view(), name='delete_floor'),
     path('floor-rooms/<int:floor_id>/', FloorRoomsView.as_view(), name='floor-rooms'),
-    path('add-room/', RoomCreateView.as_view(), name='add_room'),
 
 ]
 

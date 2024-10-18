@@ -94,22 +94,23 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
+    'SIGNING_KEY': SECRET_KEY,  # SECRET_KEY ni `settings` dan olish
     'VERIFYING_KEY': None,
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_BLACKLIST': 'rest_framework_simplejwt.token_blacklist',
 }
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT tokenlar uchun
-        'rest_framework.authentication.SessionAuthentication',  # Django sessiyalar uchun
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT autentifikatsiya
+        'rest_framework.authentication.SessionAuthentication',  # Sessiya orqali autentifikatsiya
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',  # Avtorizatsiya talab qilinadigan view'lar uchun
     ),
 }
 

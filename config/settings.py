@@ -234,6 +234,7 @@ SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_AGE = 3600
 
 CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
     "http://localhost:5050",
     "https://webtest.namspi.uz",
     "https://e-manzil.namspi.uz"

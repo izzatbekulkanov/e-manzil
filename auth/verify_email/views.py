@@ -1,8 +1,9 @@
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.conf import settings
+
+from accounts.models import CustomUser
 from auth.views import AuthView
-from auth.models import Profile
 from auth.helpers import send_verification_email
 import uuid
 
@@ -11,7 +12,7 @@ import uuid
 class VerifyEmailTokenView(AuthView):
     def get(self, request, token):
         try:
-            profile = Profile.objects.filter(email_token=token).first()
+            profile = CustomUser.objects.filter(email_token=token).first()
             profile.is_verified = True
             profile.email_token = ""
             profile.save()
@@ -22,7 +23,7 @@ class VerifyEmailTokenView(AuthView):
             return redirect("login")
             # Now, redirect to the login page
 
-        except Profile.DoesNotExist:
+        except CustomUser.DoesNotExist:
             messages.error(request, "Invalid token, please try again")
             return redirect("verify-email-page")
 
@@ -38,7 +39,7 @@ class SendVerificationView(AuthView):
 
         if email:
             token = str(uuid.uuid4())
-            user_profile = Profile.objects.filter(email=email).first()
+            user_profile = CustomUser.objects.filter(email=email).first()
             user_profile.email_token = token
             user_profile.save()
             send_verification_email(email, token)

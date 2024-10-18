@@ -4,6 +4,7 @@
       "name": "Dashboards",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "dashboard",
+      "role": "superadmin",
       "submenu": [
         {
           "url": "index",
@@ -44,6 +45,7 @@
       "name": "Layouts",
       "icon": "menu-icon tf-icons ti ti-layout-navbar",
       "slug": "layouts",
+       "role": "superadmin",
       "submenu": [
         {
           "url": "layouts-without-menu",
@@ -89,6 +91,7 @@
       "name": "Apps",
       "icon": "menu-icon tf-icons ti ti-layout-grid-add",
       "slug": "app",
+       "role": "superadmin",
       "submenu": [
         {
           "url": "app-email",
@@ -381,6 +384,7 @@
     {
       "name": "Pages",
       "icon": "menu-icon tf-icons ti ti-file",
+       "role": "superadmin",
       "slug": [
         "pages",
         "auth",
@@ -688,6 +692,7 @@
     {
       "name": "Components",
       "icon": "menu-icon tf-icons ti ti-toggle-left",
+       "role": "superadmin",
       "slug": [
         "cards",
         "ui",
@@ -929,6 +934,7 @@
     {
       "name": "Forms",
       "icon": "menu-icon tf-icons ti ti-forms",
+       "role": "superadmin",
       "slug": [
         "forms",
         "form-layouts",
@@ -1043,6 +1049,7 @@
     {
       "name": "Tables",
       "icon": "menu-icon tf-icons ti ti-layout-grid",
+       "role": "superadmin",
       "slug": [
         "tables",
         "tables-datatables"
@@ -1079,58 +1086,135 @@
       ]
     },
     {
-      "name": "Charts & Maps",
-      "icon": "menu-icon tf-icons ti ti-chart-bar",
+      "name": "Foydalanuvchilar",
+      "icon": "user-icon tf-icons ti ti-users",
       "slug": [
-        "charts",
-        "maps"
+        "user",
+        "users"
       ],
       "submenu": [
         {
-          "name": "Charts",
-          "icon": "menu-icon tf-icons ti ti-chart-pie",
-          "slug": "charts",
-          "submenu": [
-            {
-              "url": "charts-apex",
-              "name": "Apex Charts",
-              "slug": "charts-apex"
-            },
-            {
-              "url": "charts-chartjs",
-              "name": "ChartJS",
-              "slug": "charts-chartjs"
-            }
-          ]
+          "url": "tables-basic",
+          "name": "Talabalar",
+          "icon": "menu-icon tf-icons ti ti-user",
+          "slug": "tables-basic"
         },
         {
-          "url": "maps-leaflet",
-          "name": "Leaflet Maps",
-          "icon": "menu-icon tf-icons ti ti-map",
-          "slug": "maps-leaflet"
+          "url": "tables-basic",
+          "name": "Hodimlar",
+          "icon": "menu-icon tf-icons ti ti-user-check",
+          "slug": "tables-basic"
+        },
+        {
+          "name": "Datatables",
+          "icon": "menu-icon tf-icons ti ti-layout-grid",
+          "slug": "tables-datatables",
+          "submenu": [
+            {
+              "url": "tables-datatables-basic",
+              "name": "Basic",
+              "slug": "tables-datatables-basic"
+            },
+            {
+              "url": "tables-datatables-advanced",
+              "name": "Advanced",
+              "slug": "tables-datatables-advanced"
+            },
+            {
+              "url": "tables-datatables-extensions",
+              "name": "Extensions",
+              "slug": "tables-datatables-extensions"
+            }
+          ]
         }
       ]
     },
     {
-      "name": "Misc",
-      "icon": "menu-icon tf-icons ti ti-box-multiple",
-      "slug": "misc",
+      "name": "Oliygoh",
+      "icon": "home-icon tf-icons ti ti-home",
+      "slug": [
+        "user",
+        "users"
+      ],
       "submenu": [
         {
-          "url": "https://pixinvent.ticksy.com/",
-          "icon": "menu-icon tf-icons ti ti-lifebuoy",
-          "external": true,
-          "name": "Support",
-          "slug": "support",
-          "target": "_blank"
+          "url": "hemis-data",
+          "name": "HEMIS",
+          "icon": "menu-icon tf-icons ti ti-adjustments-alt",
+          "slug": "hemis-data"
         },
         {
-          "url": "https://demos.pixinvent.com/vuexy-html-admin-template/documentation/django-introduction.html",
-          "icon": "menu-icon tf-icons ti ti-file-description",
-          "external": true,
-          "name": "Documentation",
-          "slug": "documentation",
-          "target": "_blank"
+          "url": "tables-basic",
+          "name": "Hodimlar",
+          "icon": "menu-icon tf-icons ti ti-user-check",
+          "slug": "tables-basic"
+        },
+        {
+          "name": "Datatables",
+          "icon": "menu-icon tf-icons ti ti-layout-grid",
+          "slug": "tables-datatables",
+          "submenu": [
+            {
+              "url": "tables-datatables-basic",
+              "name": "Basic",
+              "slug": "tables-datatables-basic"
+            },
+            {
+              "url": "tables-datatables-advanced",
+              "name": "Advanced",
+              "slug": "tables-datatables-advanced"
+            },
+            {
+              "url": "tables-datatables-extensions",
+              "name": "Extensions",
+              "slug": "tables-datatables-extensions"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": " TTJ",
+      "icon": "location-icon tf-icons ti ti-location",
+      "slug": [
+        "TTJ",
+        "TTJies"
+      ],
+      "submenu": [
+        {
+          "url": "e-manzil-dormitory",
+          "name": " TTJ ro'yhati",
+          "icon": "menu-icon tf-icons ti ti-adjustments-alt",
+          "slug": "e-manzil-dormitory"
+
+        },
+        {
+          "url": "e-manzil-building",
+          "name": " Bino",
+          "icon": "home-star-icon tf-icons ti ti-home-star",
+          "slug": "e-manzil-building"
+        },
+        {
+          "name": "Datatables",
+          "icon": "menu-icon tf-icons ti ti-layout-grid",
+          "slug": "tables-datatables",
+          "submenu": [
+            {
+              "url": "tables-datatables-basic",
+              "name": "Basic",
+              "slug": "tables-datatables-basic"
+            },
+            {
+              "url": "tables-datatables-advanced",
+              "name": "Advanced",
+              "slug": "tables-datatables-advanced"
+            },
+            {
+              "url": "tables-datatables-extensions",
+              "name": "Extensions",
+              "slug": "tables-datatables-extensions"
+            }
+          ]
         }
       ]
     }

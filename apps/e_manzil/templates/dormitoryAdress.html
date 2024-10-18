@@ -1,0 +1,265 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}TTJ Binolar{% endblock %}
+
+{% block vendor_css %}
+  {{ block.super }}
+
+  <link rel="stylesheet" href="{% static 'vendor/libs/animate-css/animate.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/sweetalert2/sweetalert2.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/toastr/toastr.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/animate-css/animate.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/@form-validation/form-validation.css' %}" />
+
+  <style>
+    .dormitory-basic {
+      table-layout: auto;
+    }
+  </style>
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+  {{ block.super }}
+  <script src="{% static 'vendor/libs/block-ui/block-ui.js' %}"></script>
+  <script src="{% static 'vendor/libs/sweetalert2/sweetalert2.js' %}"></script>
+  <script src="{% static 'vendor/libs/toastr/toastr.js' %}"></script>
+  <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+  <script src="{% static 'vendor/libs/moment/moment.js' %}"></script>
+  <script src="{% static 'vendor/libs/flatpickr/flatpickr.js' %}"></script>
+  <script src="{% static 'vendor/libs/@form-validation/popular.js' %}"></script>
+  <script src="{% static 'vendor/libs/@form-validation/bootstrap5.js' %}"></script>
+  <script src="{% static 'vendor/libs/@form-validation/auto-focus.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+  {{ block.super }}
+  <script src="{% static 'js/extended-ui-sweetalert2.js' %}"></script>
+  <script src="{% static 'js/ui-toasts.js' %}"></script>
+
+  <script src="{% static 'js/extended-ui-blockui.js' %}"></script>
+
+  {#<script src="{% static 'js/custom-tables-datatables-basic.js' %}"></script>#}
+{% endblock page_js %}
+
+{% block content %}
+  <!-- DataTable with Buttons -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title">Talabalar turar joylari</h5>
+      <button class="btn btn-primary btn-add-record" id="add-record-button">Add New Record</button>
+    </div>
+    <div class="card-datatable table-responsive pt-0">
+      <table class="dormitory-basic table">
+        <thead>
+        <tr>
+          <th>TR</th>
+          <th>Yotoqhona</th>
+          <th>Tavfsif</th>
+          <th>Holati</th>
+          <th>Harakat</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <div class="dataTables_info"></div>
+      <div class="dataTables_paginate"></div>
+    </div>
+  </div>
+  <!-- Modal to add new record -->
+  <div class="offcanvas offcanvas-end" id="add-new-record" tabindex="-1">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title">Yangi talabalar turar joyi</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form id="form-add-new-record" method="post" onsubmit="return false">{% csrf_token %}
+        <div class="mb-3">
+          <label for="address" class="form-label">Talabalar turar joyi</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="ti ti-location-pin"></i></span>
+            <input type="text" id="address" class="form-control" name="address" placeholder="Talabalar turar joyi nomi"
+                   aria-label="Dormitory Address" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Tavsif</label>
+          <textarea id="description" name="description" class="form-control" placeholder="Tavsif"
+                    aria-label="Tavsif"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="is_active" class="form-label">Status</label>
+          <select id="is_active" name="is_active" class="form-select">
+            <option value="true">Faol</option>
+            <option value="false">Nofaol</option>
+          </select>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+          <button type="submit" class="btn btn-primary">Saqlash</button>
+          <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="offcanvas">Bekor qilish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!--/ DataTable with Buttons -->
+
+  <hr class="my-12">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+  <script>
+    $(document).ready(function() {
+      var table = $('.dormitory-basic').DataTable({
+        ajax: {
+          url: '/api/dormitory-address/',
+          dataSrc: ''
+        },
+        columns: [
+          {
+            data: null,
+            orderable: false,
+            searchable: false,
+            render: function(data, type, row, meta) {
+              return meta.row + 1;
+            }
+          },
+          { data: 'address' },
+          { data: 'description' },
+          { data: 'is_active' },
+          {
+            data: null,
+            orderable: false,
+            searchable: false,
+            render: function() {
+              return `
+                        <div class="d-inline-block">
+                            <a href="javascript:;" class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="ti ti-dots-vertical ti-md"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end m-0">
+                                <li><a href="javascript:;" class="dropdown-item edit-record">Tahrirlash</a></li>
+                                <li><a href="javascript:;" class="dropdown-item delete-record">O'chirish</a></li>
+                            </ul>
+                        </div>`;
+            }
+          }
+        ],
+        autoWidth: true,
+        dom: '<"row mb-2"<"col-sm-12 col-md-6 d-flex justify-content-start"B><"col-sm-12 col-md-6 d-flex justify-content-end"f>>t<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7 d-flex justify-content-end"p>>',
+        buttons: [
+          { extend: 'copy', className: 'btn btn-outline-primary' },
+          { extend: 'excel', className: 'btn btn-outline-success' },
+          { extend: 'csv', className: 'btn btn-outline-info' },
+          { extend: 'pdf', className: 'btn btn-outline-danger' },
+          { extend: 'print', className: 'btn btn-outline-secondary border' }
+        ]
+      });
+
+      // Utility functions
+      function showToast(message, title = '', type = 'info') {
+        toastr[type](message, title, {
+          positionClass: 'toast-top-right',
+          timeOut: 5000,
+          closeButton: true,
+          progressBar: true
+        });
+      }
+
+      function handleAjaxRequest(url, method, data, onSuccess, onError) {
+        $.blockUI({
+          message: '<div class="spinner-border text-white" role="status"></div>',
+          css: { backgroundColor: 'transparent', border: '0' },
+          overlayCSS: { opacity: 0.7 }
+        });
+
+        $.ajax({
+          url: url,
+          method: method,
+          data: data,
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken') // Add CSRF token here
+          },
+          success: function(response) {
+            $.unblockUI();
+            onSuccess(response);
+          },
+          error: function(xhr, status, error) {
+            $.unblockUI();
+            onError(xhr, status, error);
+          }
+        });
+      }
+
+      // Record add
+      $('#add-record-button').click(function() {
+        $('#add-new-record').offcanvas('show');
+      });
+
+      $('.dormitory-basic').on('click', '.delete-record', function() {
+        let rowData = table.row($(this).parents('tr')).data();
+
+        Swal.fire({
+          title: 'O\'chirishni tasdiqlaysizmi?',
+          text: 'Bu amalni qaytarib bo\'lmaydi!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'O\'chirish'
+        }).then((result) => {
+          console.log(rowData)
+          if (result.isConfirmed) {
+            handleAjaxRequest(`/api/dormitory-address/${rowData.id}/`, 'DELETE', {}, function() {
+              table.ajax.reload(null, false);
+              showToast('Yoqilgan talabalar turar joyi muvaffaqiyatli o\'chirildi!', 'Success', 'success');
+            }, function(xhr) {
+              showToast('Xatolik yuz berdi!', 'Error', 'error');
+            });
+          }
+        });
+      });
+
+      $('#form-add-new-record').submit(function(e) {
+        e.preventDefault();
+        let formData = $(this).serialize();
+        handleAjaxRequest('/api/add-dormitory-address/', 'POST', formData, function(response) {
+          table.ajax.reload(null, false);
+          showToast('Yangi talabalar turar joyi muvaffaqiyatli qo\'shildi!', 'Success', 'success');
+          $('#add-new-record').offcanvas('hide');
+        }, function(xhr) {
+          showToast('Xatolik yuz berdi!', 'Error', 'error');
+        });
+      });
+
+    });
+  </script>
+
+{% endblock content %}

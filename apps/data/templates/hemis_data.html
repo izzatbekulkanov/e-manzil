@@ -1,0 +1,575 @@
+{% extends layout_path %}
+
+{% load static %}
+{% load i18n %}
+
+{% block title %}HEMIS TIZIMI{% endblock %}
+
+{% block vendor_css %}
+  {{ block.super }}
+
+  <link rel="stylesheet" href="{% static 'vendor/libs/animate-css/animate.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/sweetalert2/sweetalert2.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/toastr/toastr.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/animate-css/animate.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'vendor/libs/spinkit/spinkit.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'vendor/libs/quill/typography.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/quill/katex.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/quill/editor.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/select2/select2.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/dropzone/dropzone.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/tagify/tagify.css' %}" />
+{% endblock vendor_css %}
+
+{% block vendor_js %}
+  {{ block.super }}
+
+  <script src="{% static 'vendor/libs/sweetalert2/sweetalert2.js' %}"></script>
+  <script src="{% static 'vendor/libs/toastr/toastr.js' %}"></script>
+
+  <script src="{% static 'vendor/libs/block-ui/block-ui.js' %}"></script>
+  <script src="{% static 'vendor/libs/quill/katex.js' %}"></script>
+  <script src="{% static 'vendor/libs/quill/quill.js' %}"></script>
+  <script src="{% static 'vendor/libs/select2/select2.js' %}"></script>
+  <script src="{% static 'vendor/libs/dropzone/dropzone.js' %}"></script>
+  <script src="{% static 'vendor/libs/jquery-repeater/jquery-repeater.js' %}"></script>
+  <script src="{% static 'vendor/libs/flatpickr/flatpickr.js' %}"></script>
+  <script src="{% static 'vendor/libs/tagify/tagify.js' %}"></script>
+{% endblock vendor_js %}
+
+{% block page_js %}
+  {{ block.super }}
+  <script src="{% static 'js/extended-ui-sweetalert2.js' %}"></script>
+  <script src="{% static 'js/ui-toasts.js' %}"></script>
+
+  <script src="{% static 'js/extended-ui-blockui.js' %}"></script>
+  <script src="{% static 'js/app-ecommerce-product-add.js' %}"></script>
+{% endblock page_js %}
+
+{% block content %}
+  <div class="app-ecommerce">
+
+    <!-- Add Product -->
+    <div
+      class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-6 row-gap-4">
+
+      <div class="d-flex flex-column justify-content-center">
+        <h4 class="mb-1">HEMIS</h4>
+        <p class="mb-0">HEMIS - Oliy ta'lim jarayonlarini boshqarish axborot tizimi</p>
+      </div>
+      <button class="btn btn-outline-info" id="update-edu-list">Oliygohlar ro'yhatini yangilash</button>
+    </div>
+
+    <!-- Progress Container -->
+    <div id="progress-container" class="d-none">
+      <div class="text-light small fw-medium mb-1">Yuklanmoqda...</div>
+      <div class="progress">
+        <!-- Animated Progress Bars -->
+        <div id="progress-bar-departments" class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
+             role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="progress-bar-specialties" class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+             role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="progress-bar-curriculum" class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
+             role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <!-- First column-->
+      <div class="col-12 col-lg-12">
+        <!-- Variants -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Oliygohlar</h5>
+          </div>
+          <div class="card-body">
+            <form class="form-repeater">
+              <div class="row">
+                <div class="mb-6 col-4">
+                  <label class="form-label" for="form-repeater-1-1">Oliygohni tanlang</label>
+                  <select id="form-repeater-1-1" class="select2 form-select" data-placeholder="Oliygohni tanlang">
+                    <option value="">Oliygohni tanlang</option>
+                    {% for university in universities %}
+                      <option value="{{ university.id }}">{{ university.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="mb-6 col-8">
+                  <label class="form-label invisible" for="form-repeater-1-2">Not visible</label>
+                  <input type="text" id="form-repeater-1-2" class="form-control"
+                         placeholder="HEMIS KALITINI KIRITING" />
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-primary">
+                  <i class='ti ti-plus ti-xs me-2' id="save-hemis-key"></i>
+                  Saqlash
+                </button>
+                <button id="update-all" class="btn btn-success">
+                  <i class='ti ti-down ti-xs me-2'></i>
+                  Barcha ma'lumotlarni yangilash
+                </button>
+                <div class="col-12 col-lg-12 mb-6 mb-xl-0">
+                  <div class="demo-inline-spacing mt-4">
+                    <div class="list-group" id="university-list-container">
+                      <div
+                        class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect">
+                        <div class="w-100">
+                          <div class="d-flex justify-content-between ">
+                            <div class="University-info">
+                              <h6 class="mb-1 fw-normal">Oliygoh nomi</h6>
+                              <small class="text-muted">Hemis kaliti</small>
+                              <div class="user-status">
+                                <span class="badge badge-dot bg-success"></span>
+                                <small>Activ</small>
+                              </div>
+                            </div>
+                            <div class="add-btn">
+                              <button class="btn btn-success btn-sm waves-effect waves-light">Faol</button>
+                              <button class="btn btn-info btn-sm waves-effect waves-light">Kalitni tahrirlash</button>
+                              <button class="btn btn-danger btn-sm waves-effect waves-light">O'chirish</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Inventory -->
+        <div class="card mb-6">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Barcha ma'lumotlar</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <!-- Navigation -->
+              <div class="col-12 col-md-4 col-xl-5 col-xxl-4 mx-auto card-separator">
+                <div class="d-flex justify-content-between flex-column mb-4 mb-md-0 pe-md-4">
+                  <div class="nav-align-left">
+                    <ul class="nav nav-pills flex-column w-100">
+                      <li class="nav-item">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#statistics">
+                          <i class="ti ti-number ti-sm me-1_5"></i>
+                          <span class="align-middle">Raqamda</span>
+                        </button>
+                      </li>
+                      <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#university">
+                          <i class="ti ti-home-bolt ti-sm me-1_5"></i>
+                          <span class="align-middle">Universitetlar</span>
+                        </button>
+                      </li>
+                      <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#curriculum">
+                          <i class="ti ti-box ti-sm me-1_5"></i>
+                          <span class="align-middle">O'quv rejalar</span>
+                        </button>
+                      </li>
+                      <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specialty">
+                          <i class="ti ti-box ti-sm me-1_5"></i>
+                          <span class="align-middle">Yo'nalishlar</span>
+                        </button>
+                      </li>
+                      <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#department">
+                          <i class="ti ti-box ti-sm me-1_5"></i>
+                          <span class="align-middle">Bo'limlar</span>
+                        </button>
+                      </li>
+                      <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#academic-group">
+                          <i class="ti ti-users-group ti-sm me-1_5"></i>
+                          <span class="align-middle">Akademik guruhlar</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <!-- /Navigation -->
+              <!-- Options -->
+              <div class="col-12 col-md-8 col-xl-7 col-xxl-8 pt-6 pt-md-0">
+                <div class="tab-content p-0 ps-md-4">
+                  <!-- Restock Tab -->
+                  <div class="tab-pane fade show active" id="statistics" role="tabpanel">
+
+                    <div class="row mb-4 g-4 pe-md-4">
+                    </div>
+                    <div>
+                      <h6 class="mb-2 fw-normal">Universitetlar: 11</h6>
+                      <h6 class="mb-2 fw-normal">O'quv rejalar: 11</h6>
+                      <h6 class="mb-2 fw-normal">Yo'nalishlar: 11</h6>
+                      <h6 class="mb-2 fw-normal">Bo'limlar: 11</h6>
+                      <h6 class="mb-0 fw-normal">Akademik guruhlar: 11</h6>
+                    </div>
+                  </div>
+                  <!-- University Tab -->
+                  <div class="tab-pane fade" id="university" role="tabpanel">
+                      <h6 class="mb-3 text-body">Universitetlar</h6>
+                      <!-- Universitetlar ro'yxati bu yerga qo'shiladi -->
+                  </div>
+                  <!-- O'quv rejalar Tab -->
+                  <div class="tab-pane fade" id="curriculum" role="tabpanel">
+                      <h6 class="mb-3 text-body">O'quv rejalar</h6>
+                      <!-- O'quv rejalar ro'yxati bu yerga qo'shiladi -->
+                  </div>
+                  <!-- Yo'nalishlar Tab -->
+                  <div class="tab-pane fade" id="specialty" role="tabpanel">
+                      <h6 class="mb-3 text-body">Yo'nalishlar</h6>
+                      <!-- Yo'nalishlar ro'yxati bu yerga qo'shiladi -->
+                  </div>
+                  <!-- Bo'limlar Tab -->
+                  <div class="tab-pane fade" id="department" role="tabpanel">
+                      <h6 class="mb-2 text-body">Bo'limlar</h6>
+                      <!-- Bo'limlar ro'yxati bu yerga qo'shiladi -->
+                  </div>
+                  <!-- Akademik guruhlar Tab -->
+                  <div class="tab-pane fade" id="academic-group" role="tabpanel">
+                      <h6 class="mb-3 text-body">Akademik guruhlar</h6>
+                      <!-- Akademik guruhlar ro'yxati bu yerga qo'shiladi -->
+                  </div>
+
+                </div>
+              </div>
+              <!-- /Options-->
+            </div>
+          </div>
+        </div>
+        <!-- /Inventory -->
+      </div>
+      <!-- /Second column -->
+
+    </div>
+
+
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        // Utility functions
+        function showToast(message, title = '', type = 'info') {
+            toastr[type](message, title, {
+                positionClass: 'toast-top-right',
+                timeOut: 5000,
+                closeButton: true,
+                progressBar: true
+            });
+        }
+
+        function handleAjaxRequest(url, method, data, onSuccess, onError) {
+            $.blockUI({
+                message: '<div class="spinner-border text-white" role="status"></div>',
+                css: { backgroundColor: 'transparent', border: '0' },
+                overlayCSS: { opacity: 0.5 }
+            });
+
+            $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                success: onSuccess,
+                error: onError,
+                complete: $.unblockUI
+            });
+        }
+
+        // Fetch and display universities
+        function fetchUniversities() {
+            handleAjaxRequest(
+                "{% url 'api-token-university' %}",
+                'GET',
+                null,
+                function(data) {
+                    let html = data.map(university => `
+                        <div class="list-group-item list-group-item-action d-flex align-items-center cursor-pointer waves-effect">
+                            <div class="w-100">
+                                <div class="d-flex justify-content-between">
+                                    <div class="University-info">
+                                        <h6 class="mb-1 fw-normal">${university.name}</h6>
+                                        <small class="text-muted">${university.api_token}</small>
+                                        <div class="user-status">
+                                            <span class="badge badge-dot ${university.is_active ? 'bg-success' : 'bg-danger'}"></span>
+                                            <small>${university.is_active ? 'Active' : 'Inactive'}</small>
+                                        </div>
+                                    </div>
+                                    <div class="add-btn">
+                                        <button class="btn btn-success btn-sm waves-effect waves-light mark-active" data-code="${university.code}">Faol</button>
+                                        <button class="btn btn-info btn-sm waves-effect waves-light">Kalitni tahrirlash</button>
+                                        <button class="btn btn-danger btn-sm waves-effect waves-light delete-btn" data-code="${university.code}">O'chirish</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    $('#university-list-container').html(html);
+                },
+                function(xhr, status, error) {
+                    console.error('Failed to fetch universities:', error);
+                }
+            );
+        }
+
+        // Update university list
+        $('#update-edu-list').on('click', function() {
+            handleAjaxRequest(
+                "{% url 'update-university' %}",
+                'GET',
+                null,
+                function(response) {
+                    showToast(`${response.updated_count} ta universitet muvaffaqiyatli yangilandi.`, 'Muvaffaqiyat!', 'success');
+                    fetchUniversities();
+                },
+                function(xhr, status, error) {
+                    showToast(`Oliygohlar ro‘yxatini yangilashda xatolik yuz berdi: ${xhr.status} ${error}`, 'Xatolik!', 'error');
+                }
+            );
+        });
+
+        // Save API token
+        $('#save-hemis-key').on('click', function() {
+            const universityId = $('#form-repeater-1-1').val();
+            const apiToken = $('#form-repeater-1-2').val();
+
+            if (universityId && apiToken) {
+                handleAjaxRequest(
+                    "{% url 'save-hemis' %}",
+                    'POST',
+                    {
+                        university_id: universityId,
+                        api_token: apiToken,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    function() {
+                        showToast('API kalit muvaffaqiyatli saqlandi.', 'Muvaffaqiyat!', 'success');
+                        fetchUniversities();
+                        $('#form-repeater-1-1, #form-repeater-1-2').val('');
+                    },
+                    function(xhr, status, error) {
+                        showToast('API kalitini saqlashda xatolik yuz berdi.', 'Xatolik!', 'error');
+                    }
+                );
+            } else {
+                showToast('Iltimos, barcha maydonlarni to‘ldiring.', 'Ogohlantirish!', 'warning');
+            }
+        });
+
+        // Mark university as active
+        $(document).on('click', '.mark-active', function() {
+            const universityCode = $(this).data('code');
+
+            Swal.fire({
+                title: 'Aktiv holatga o\'tkazasizmi?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Ha, aktiv qiling!',
+                cancelButtonText: 'Bekor qilish',
+                customClass: {
+                    confirmButton: 'btn btn-success me-3 waves-effect waves-light',
+                    cancelButton: 'btn btn-label-secondary waves-effect waves-light'
+                },
+                buttonsStyling: false
+            }).then(result => {
+                if (result.isConfirmed) {
+                    handleAjaxRequest(
+                        "{% url 'set-university-active' %}",
+                        'POST',
+                        {
+                            university_code: universityCode,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        function(response) {
+                            showToast(response.message, 'Muvaffaqiyat!', 'success');
+                            fetchUniversities();
+                        },
+                        function(xhr, status, error) {
+                            showToast('Universitetni aktiv holatga o‘tkazishda xatolik yuz berdi.', 'Xatolik!', 'error');
+                        }
+                    );
+                }
+            });
+        });
+
+        // Delete university
+        $(document).on('click', '.delete-btn', function() {
+            const universityCode = $(this).data('code');
+
+            Swal.fire({
+                title: 'Haqiqatdan ham o\'chirmoqchimisiz?',
+                text: 'Bu amalni qaytarib bo‘lmaydi!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ha, o\'chir!',
+                cancelButtonText: 'Bekor qilish',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                    cancelButton: 'btn btn-label-secondary waves-effect waves-light'
+                },
+                buttonsStyling: false
+            }).then(result => {
+                if (result.isConfirmed) {
+                    handleAjaxRequest(
+                        "{% url 'delete-university-api-token' %}",
+                        'POST',
+                        {
+                            university_code: universityCode,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        function(response) {
+                            showToast(response.message, 'Muvaffaqiyat!', 'success');
+                            fetchUniversities();
+                        },
+                        function(xhr, status, error) {
+                            showToast('API kalitini o\'chirishda xatolik yuz berdi.', 'Xatolik!', 'error');
+                        }
+                    );
+                }
+            });
+        });
+
+        // Update all data with progress bars
+        $('#update-all').click(function() {
+            $('#progress-container').removeClass('d-none');
+
+            const actions = [
+                { action: 'save_departments', progressId: 'progress-bar-departments' },
+                { action: 'save_specialty', progressId: 'progress-bar-specialties' },
+                { action: 'save_curriculum', progressId: 'progress-bar-curriculum' },
+                { action: 'save_groups', progressId: 'progress-bar-groups' }
+            ];
+
+            function performAction(index) {
+                if (index >= actions.length) {
+                    $('#progress-container').addClass('d-none');
+                    showToast('Barcha ma\'lumotlar muvaffaqiyatli yangilandi.');
+                    return;
+                }
+
+                const { action, progressId } = actions[index];
+                $.post(
+                    '{% url 'data-fetch-and-save' %}',
+                    {
+                        action: action,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    function(response) {
+                        if (response.success) {
+                            const progress = ((index + 1) / actions.length) * 100;
+                            $(`#${progressId}`).css('width', `${progress}%`).attr('aria-valuenow', progress);
+                            performAction(index + 1);
+                        } else {
+                            $('#progress-container').addClass('d-none');
+                            showToast(`Garchi ma\'lumotlarni yangilashda xatolik yuz berdi: ${response.message}`);
+                        }
+                    }
+                ).fail(() => {
+                    $('#progress-container').addClass('d-none');
+                    showToast('Tarmoq xatosi yuz berdi.');
+                });
+            }
+
+            performAction(0);
+        });
+
+                fetchUniversities(); // Initial fetch of universities
+            });
+    
+    $(document).ready(function() {
+    $.ajax({
+        url: '{% url 'university-data-view' %}',  // Bu yerda URLni o'zingizning view manzilingiz bilan almashtiring
+        method: 'GET',
+        success: function(data) {
+            // Umumiy statistikani yangilash
+            $('#statistics').find('h6:contains("Universitetlar")').text('Universitetlar: ' + data.universities.count);
+            $('#statistics').find('h6:contains("O\'quv rejalar")').text('O\'quv rejalar: ' + data.curriculums.count);
+            $('#statistics').find('h6:contains("Yo\'nalishlar")').text('Yo\'nalishlar: ' + data.specialties.count);
+            $('#statistics').find('h6:contains("Bo\'limlar")').text('Bo\'limlar: ' + data.departments.count);
+            $('#statistics').find('h6:contains("Akademik guruhlar")').text('Akademik guruhlar: ' + data.academic_groups.count);
+
+                        // Universitetlar ro'yxatini yangilash
+            $('#university').html(''); // Tozalash
+            $.each(data.universities.items, function(index, university) {
+                $('#university').append(
+                    '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                    '<div>' +
+                        '<h6 class="mb-1">' + university.name + '</h6>' +
+                        '<small class="text-muted">Kod: ' + university.code + '</small>' +
+                    '</div>' +
+                    '<a href="' + university.employee_url + '" target="_blank" class="btn btn-sm btn-outline-primary">Hodimlar Sayti</a>' +
+                    '</li>'
+                );
+            });
+
+            // O'quv rejalar ro'yxatini yangilash
+            $('#curriculum').html(''); // Tozalash
+            $.each(data.curriculums.items, function(index, curriculum) {
+                $('#curriculum').append(
+                    '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                    '<div>' +
+                        '<h6 class="mb-1">' + curriculum.name + '</h6>' +
+                        '<small class="text-muted">Kod: ' + curriculum.codeID + '</small>' +
+                    '</div>' +
+                    '</li>'
+                );
+            });
+
+            // Yo'nalishlar ro'yxatini yangilash
+            $('#specialty').html(''); // Tozalash
+            $.each(data.specialties.items, function(index, specialty) {
+                $('#specialty').append(
+                    '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                    '<div>' +
+                        '<h6 class="mb-1">' + specialty.name + '</h6>' +
+                        '<small class="text-muted">Kod: ' + specialty.code + '</small>' +
+                    '</div>' +
+                    '</li>'
+                );
+            });
+
+            // Bo'limlar ro'yxatini yangilash
+            $('#department').html(''); // Tozalash
+            $.each(data.departments.items, function(index, department) {
+                $('#department').append(
+                    '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                    '<div>' +
+                        '<h6 class="mb-1">' + department.name + '</h6>' +
+                        '<small class="text-muted">Kod: ' + department.code + '</small>' +
+                    '</div>' +
+                    '</li>'
+                );
+            });
+
+            // Akademik guruhlar ro'yxatini yangilash
+            $('#academic-group').html(''); // Tozalash
+            $.each(data.academic_groups.items, function(index, group) {
+                $('#academic-group').append(
+                    '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                    '<div>' +
+                        '<h6 class="mb-1">' + group.name + '</h6>' +
+                        '<small class="text-muted">Kod: ' + group.codeID + '</small>' +
+                    '</div>' +
+                    '</li>'
+                );
+            });
+        },
+        error: function(error) {
+            console.log("Xatolik yuz berdi: ", error);
+        }
+    });
+});
+    
+    
+        </script>
+        {% endblock %}

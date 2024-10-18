@@ -3,6 +3,7 @@ from django.urls import include, path
 from web_project.views import SystemView
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')), # grappelli URLS
     path("admin/", admin.site.urls),
 
     path("api/", include("api.urls")),
@@ -10,6 +11,7 @@ urlpatterns = [
     # path("data/", include("apps.data.urls")),
     path("e-manzil/", include("apps.e_manzil.urls")),
     # path("data/", include("apps.data.urls")),
+
 
     # Dashboard urls
     path("", include("other.dashboards.urls")),

@@ -35,12 +35,6 @@
           "name": "HEMIS",
           "icon": "menu-icon tf-icons ti ti-adjustments-alt",
           "slug": "hemis-data"
-        },
-        {
-          "url": "tables-basic",
-          "name": "Hodimlar",
-          "icon": "menu-icon tf-icons ti ti-user-check",
-          "slug": "tables-basic"
         }
       ]
     },

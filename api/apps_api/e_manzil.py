@@ -43,6 +43,7 @@ class DormitoryAddressList(generics.ListCreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# TTJ BINOLAR
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_dormitory_address(request):
@@ -75,6 +76,10 @@ class DormitoryAddressDeleteView(View):
             return JsonResponse({'error': 'Dormitory address not found.'}, status=404)
 
 
+# / TTJ BINOLAR
+
+
+# Binolar
 class AddBuildingView(generics.CreateAPIView):
     queryset = Building.objects.all()
     serializer_class = BuildingSerializer
@@ -112,6 +117,8 @@ class AddBuildingView(generics.CreateAPIView):
     def get(self, request, *args, **kwargs):
         return Response({"message": "GET so'rovi muvaffaqiyatli bajarildi!"}, status=status.HTTP_200_OK)
 
+
+# /Binolar
 
 class BuildingFloorDataView(View):
     def get(self, request, *args, **kwargs):

@@ -3,6 +3,9 @@ from django.contrib.auth import get_user_model
 
 from accounts.models import CustomUser
 
+
+# OopCompanion:suppressRename
+
 User = get_user_model()
 
 

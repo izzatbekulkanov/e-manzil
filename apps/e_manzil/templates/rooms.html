@@ -3,199 +3,106 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}TTJ Binolar{% endblock %}
+{% block title %}E-Manzil Binolar{% endblock %}
 
 {% block vendor_css %}
   {{ block.super }}
-
   <link rel="stylesheet" href="{% static 'vendor/libs/animate-css/animate.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/sweetalert2/sweetalert2.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/toastr/toastr.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/animate-css/animate.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/@form-validation/form-validation.css' %}" />
 
+  <link rel="stylesheet" href="{% static 'vendor/libs/spinkit/spinkit.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'vendor/libs/quill/typography.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/quill/katex.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/quill/editor.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/select2/select2.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/dropzone/dropzone.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/tagify/tagify.css' %}" />
 {% endblock vendor_css %}
 
 {% block vendor_js %}
   {{ block.super }}
-  <script src="{% static 'vendor/libs/block-ui/block-ui.js' %}"></script>
+
   <script src="{% static 'vendor/libs/sweetalert2/sweetalert2.js' %}"></script>
   <script src="{% static 'vendor/libs/toastr/toastr.js' %}"></script>
-  <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
-  <script src="{% static 'vendor/libs/moment/moment.js' %}"></script>
+
+  <script src="{% static 'vendor/libs/block-ui/block-ui.js' %}"></script>
+  <script src="{% static 'vendor/libs/quill/katex.js' %}"></script>
+  <script src="{% static 'vendor/libs/quill/quill.js' %}"></script>
+  <script src="{% static 'vendor/libs/select2/select2.js' %}"></script>
+  <script src="{% static 'vendor/libs/dropzone/dropzone.js' %}"></script>
+  <script src="{% static 'vendor/libs/jquery-repeater/jquery-repeater.js' %}"></script>
   <script src="{% static 'vendor/libs/flatpickr/flatpickr.js' %}"></script>
-  <script src="{% static 'vendor/libs/@form-validation/popular.js' %}"></script>
-  <script src="{% static 'vendor/libs/@form-validation/bootstrap5.js' %}"></script>
-  <script src="{% static 'vendor/libs/@form-validation/auto-focus.js' %}"></script>
+  <script src="{% static 'vendor/libs/tagify/tagify.js' %}"></script>
+  <script src="{% static 'vendor/libs/apex-charts/apexcharts.js' %}"></script>
+  <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
 {% endblock vendor_js %}
+
+{% block page_css %}
+  {{ block.super }}
+
+  {#  <script src="{% static 'js/ui-modals.js' %}"></script>#}
+{% endblock page_css %}
 
 {% block page_js %}
   {{ block.super }}
-  <script src="{% static 'js/extended-ui-sweetalert2.js' %}"></script>
-  <script src="{% static 'js/ui-toasts.js' %}"></script>
 
-  <script src="{% static 'js/extended-ui-blockui.js' %}"></script>
-
-  {#<script src="{% static 'js/custom-tables-datatables-basic.js' %}"></script>#}
 {% endblock page_js %}
 
 {% block content %}
-  <!-- DataTable with Buttons -->
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="card-title">Talabalar turar joylari</h5>
-      <button class="btn btn-primary btn-add-record" id="add-record-button">Add New Record</button>
-    </div>
-    <div class="card shadow-sm rounded-3 border-0 overflow-hidden">
-        <div class="card-datatable table-responsive pt-0">
-            <table class="dormitory-basic table table-striped table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="text-center py-3">TR</th>
-                        <th class="text-center py-3">Yotoqhona</th>
-                        <th class="text-center py-3">Tavfsif</th>
-                        <th class="text-center py-3">Holati</th>
-                        <th class="text-center py-3">Harakat</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Ma'lumotlar qo'shiladi -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="card-footer d-flex justify-content-between">
-      <div class="dataTables_info"></div>
-      <div class="dataTables_paginate"></div>
-    </div>
-  </div>
-  <!-- Modal to add new record -->
-  <div class="offcanvas offcanvas-end" id="add-new-record" tabindex="-1">
-    <div class="offcanvas-header border-bottom">
-      <h5 class="offcanvas-title">Yangi talabalar turar joyi</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <form id="form-add-new-record" method="post" onsubmit="return false">{% csrf_token %}
-        <div class="mb-3">
-          <label for="address" class="form-label">Talabalar turar joyi</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="ti ti-location-pin"></i></span>
-            <input type="text" id="address" class="form-control" name="address" placeholder="Talabalar turar joyi nomi"
-                   aria-label="Dormitory Address" />
+  <div class="row g-6">
+    <!-- Vehicles overview -->
+    <nav class="navbar navbar-example navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" >Kichik menyu</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-ex-3">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-ex-3">
+          <div class="navbar-nav me-auto">
+            {#            <a class="nav-item nav-link active" href="javascript:void(0)">Home</a>#}
+            {#            <a class="nav-item nav-link" href="javascript:void(0)">About</a>#}
+            {#            <a class="nav-item nav-link" href="javascript:void(0)">Contact</a>#}
           </div>
+
+          <form onsubmit="return false">
+            <button class="btn btn-primary waves-effect waves-light" type="button"  >
+              Excample
+            </button>
+          </form>
         </div>
-        <div class="mb-3">
-          <label for="description" class="form-label">Tavsif</label>
-          <textarea id="description" name="description" class="form-control" placeholder="Tavsif"
-                    aria-label="Tavsif"></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="is_active" class="form-label">Status</label>
-          <select id="is_active" name="is_active" class="form-select">
-            <option value="true">Faol</option>
-            <option value="false">Nofaol</option>
-          </select>
-        </div>
-        <div class="d-flex justify-content-between mt-4">
-          <button type="submit" class="btn btn-primary">Saqlash</button>
-          <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="offcanvas">Bekor qilish</button>
-        </div>
-      </form>
+      </div>
+    </nav>
+    <div id="building-data-container" class="container mt-4">
+      <!-- Dynamic content will be appended here -->
     </div>
+    <!--/ Vehicles overview -->
   </div>
 
-  <!--/ DataTable with Buttons -->
 
-  <hr class="my-12">
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script>
-    // Funksiya: Cookie qiymatini olish
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          // Cookie nomi bilan moslikni tekshirish
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
+    $(document).ready(function () {
+      const Cookies = window.Cookies;
+      const csrftoken = Cookies.get('csrftoken');
+
+      // CSRF tokenni har bir AJAX so'rovga qo'shish
+      $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+          if (!/^https?:/.test(settings.url)) {
+            xhr.setRequestHeader('X-CSRFToken', csrftoken);
           }
         }
-      }
-      return cookieValue;
-    }
-
-    // Document tayyor bo'lganda ishga tushadi
-    $(document).ready(function() {
-      // DataTable o'rnatish
-      var table = $('.dormitory-basic').DataTable({
-        ajax: {
-          url: '/api/dormitory-address/', // Ma'lumotlar olish uchun API manzili
-          dataSrc: ''
-        },
-        columns: [
-          {
-            data: null, // Satr raqami uchun
-            orderable: false,
-            searchable: false,
-            render: function(data, type, row, meta) {
-              return meta.row + 1; // Har bir satrning raqami
-            }
-          },
-          { data: 'address' }, // Manzil
-          { data: 'description' }, // Qo'shimcha tavsif
-          {
-            data: 'is_active',
-            render: function(data) {
-                // Faol yoki nofaol holati uchun Bootstrap yorliq
-                if (data) {
-                    return '<span class="badge bg-success">Faol</span>'; // Faol bo'lsa yashil yorliq
-                } else {
-                    return '<span class="badge bg-danger">Nofaol</span>'; // Nofaol bo'lsa qizil yorliq
-                }
-            }
-          },
-          {
-            data: null,
-            orderable: false,
-            searchable: false,
-            render: function() {
-              // Har bir satr uchun amal tugmachalari
-              return `
-              <div class="d-inline-block">
-                <a href="javascript:;" class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                  <i class="ti ti-dots-vertical ti-md"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end m-0">
-                  <li><a href="javascript:;" class="dropdown-item edit-record">Tahrirlash</a></li>
-                  <li><a href="javascript:;" class="dropdown-item delete-record">O'chirish</a></li>
-                </ul>
-              </div>`;
-            }
-          }
-        ],
-        autoWidth: true,
-        dom: '<"row mb-2"<"col-sm-12 col-md-6 d-flex justify-content-start"B><"col-sm-12 col-md-6 d-flex justify-content-end"f>>t<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7 d-flex justify-content-end"p>>',
-        buttons: [
-          { extend: 'copy', className: 'btn btn-outline-primary border' }, // Copy button
-          { extend: 'excel', className: 'btn btn-outline-success border' }, // Excel button
-          { extend: 'csv', className: 'btn btn-outline-info border' }, // CSV button
-          { extend: 'pdf', className: 'btn btn-outline-danger border' }, // PDF button
-          { extend: 'print', className: 'btn btn-outline-secondary border' } // Print button
-        ]
       });
 
-      // Funksiya: Toaster orqali xabar ko'rsatish
+      // Toast bildirishnomasi funksiyasi
       function showToast(message, title = '', type = 'info') {
         toastr[type](message, title, {
           positionClass: 'toast-top-right',
@@ -205,77 +112,224 @@
         });
       }
 
-      // Funksiya: AJAX so'rovi uchun umumiy kod
-      function handleAjaxRequest(url, method, data, onSuccess, onError) {
-        // Bloklash animatsiyasi (foydalanuvchi kutayotgan vaqtda)
+      // Universal AJAX so'rovlar uchun funksiya
+      function handleAjaxRequest(url, method, data = null, onSuccess, onError = null) {
         $.blockUI({
           message: '<div class="spinner-border text-white" role="status"></div>',
           css: { backgroundColor: 'transparent', border: '0' },
-          overlayCSS: { opacity: 0.7 }
+          overlayCSS: { opacity: 0.5 }
         });
 
-        // AJAX so'rovini amalga oshirish
         $.ajax({
           url: url,
           method: method,
-          data: data,
-          headers: {
-            'X-CSRFToken': getCookie('csrftoken') // CSRF token qo'shish
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: onSuccess,
+          error: onError || function (xhr) {
+            showToast('Xatolik yuz berdi: ' + xhr.responseText, 'Xatolik!', 'error');
           },
-          success: function(response) {
-            $.unblockUI(); // Bloklashni olib tashlash
-            onSuccess(response); // Muvaffaqiyatli javobni qayta ishlash
-          },
-          error: function(xhr, status, error) {
-            $.unblockUI(); // Bloklashni olib tashlash
-            onError(xhr, status, error); // Xatolikni qayta ishlash
-          }
+          complete: $.unblockUI
         });
       }
 
-      // Yangi yozuv qo'shish tugmachasi bosilganda
-      $('#add-record-button').click(function() {
-        $('#add-new-record').offcanvas('show');
-      });
 
-      // O'chirish tugmachasi bosilganda
-      $('.dormitory-basic').on('click', '.delete-record', function() {
-        let rowData = table.row($(this).parents('tr')).data();
+      // Bino va qavat ma'lumotlarini yuklash va ko'rsatish
+      function loadBuildingFloorData() {
+        handleAjaxRequest('/api/building-floor-data/', 'GET', null, renderBuildingFloorData);
+      }
 
+      // Bino va qavat ma'lumotlarini ko'rsatish uchun kartalar yaratish
+      function renderBuildingFloorData(data) {
+        const container = $('#building-data-container').empty();
+        const cardRow = $('<div class="row"></div>');
+        data.dormitories.forEach(dormitory => {
+          dormitory.buildings.forEach(building => {
+            cardRow.append(generateBuildingCardHtml(building, dormitory.dormitory_address));
+          });
+        });
+        container.append(cardRow);
+      }
+
+      // Bino kartasini yaratish uchun HTML
+      function generateBuildingCardHtml(building, dormitoryAddress) {
+        // Agar bino faol bo'lmasa, hech narsa qaytarmasin
+        if (!building.is_active) {
+          return '';
+        }
+
+        return `
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card h-100 " >
+              <div class="card-header d-flex align-items-center justify-content-between ">
+                <h5 class="card-title mb-0 form-control border-primary text-center">${building.building_name} | ${dormitoryAddress}</h5>
+              </div>
+              <div class="card-body">
+                ${generateBuildingTable(building.floors)}
+              </div>
+            </div>
+          </div>`;
+      }
+
+      // Bino o'chirish funksiyasi
+      function deleteBuilding(buildingId) {
+        console.log(`Building ID: ${buildingId}`);
+        // SweetAlert orqali tasdiqlash oynasi
         Swal.fire({
-          title: 'O\'chirishni tasdiqlaysizmi?',
-          text: 'Bu amalni qaytarib bo\'lmaydi!',
+          title: 'Haqiqatan ham ushbu binoni o\'chirmoqchimisiz?',
+          text: "Bu amalni qaytarib bo'lmaydi!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'O\'chirish'
+          confirmButtonText: 'Ha, o\'chirish!',
+          cancelButtonText: 'Bekor qilish'
         }).then((result) => {
           if (result.isConfirmed) {
-            handleAjaxRequest(`/api/dormitory-address/${rowData.id}/`, 'DELETE', {}, function() {
-              table.ajax.reload(null, false); // Jadvalni yangilash
-              showToast('Yotoqxona manzili muvaffaqiyatli o\'chirildi!', 'Success', 'success');
-            }, function(xhr) {
-              showToast('Xatolik yuz berdi!', 'Error', 'error');
+            // `buildingId` ni console'da ko'rsatish
+            console.log(`Tasdiqlandi: Building ID ${buildingId}`);
+             // O'chirish bo'yicha AJAX yoki boshqa amallarni qo'shing
+             handleAjaxRequest(`/api/delete-buildings/`, 'POST', { building_id: buildingId }, function (response) {
+               if (response.status === 'success') {
+                 showToast('Bino muvaffaqiyatli o\'chirildi!', 'Muvaffaqiyat!', 'success');
+                 loadBuildingFloorData();
+               } else {
+                 showToast(response.message, 'Xatolik!', 'error');
+               }
+             });
+          }
+        });
+      }
+
+      // Dropdown menyu hodisasini qo'shish
+      $(document).on('click', '#delete-building', function () {
+        const buildingId = $(this).data('building-id');
+        deleteBuilding(buildingId);
+      });
+
+      // Bino uchun qavatlar jadvalini yaratish
+      function generateBuildingTable(floors) {
+        let tableHtml = `
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Qavat</th>
+                  <th>Xonalar</th>
+                  <th>Harakat</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${floors.map(generateFloorRowHtml).join('')}
+              </tbody>
+            </table>
+          </div>`;
+        return tableHtml;
+      }
+
+      // Qavat uchun qator yaratish
+      function generateFloorRowHtml(floor) {
+        const rowClass = floor.is_active ? '' : 'table-danger';
+        const rowIcon = floor.is_active ? `<i class="ti ti-trash text-danger"></i>` : `<i class="ti ti-x text-danger"></i>` ;
+        return `
+          <tr class="${rowClass}">
+            <td class="w-50">
+              <div class="d-flex align-items-center">
+                <i class="ti ti-smart-home ti-lg"></i>
+                <h6 class="mb-0">${floor.floor_number}-qavat</h6>
+              </div>
+            </td>
+            <td class="text-end">${floor.room_count}</td>
+            <td class="text-end">
+              <button class="btn delete-floor-btn" data-floor-id="${floor.floor_id}">
+                ${rowIcon}
+              </button>
+            </td>
+          </tr>`;
+      }
+
+      // Qavatni o'chirish funksiyasi
+      function deleteFloor(floorId) {
+        // SweetAlert confirm oynasini ishlatish
+        Swal.fire({
+          title: 'Haqiqatan ham ushbu qavatni o\'chirmoqchimisiz?',
+          text: "Bu amalni qaytarib bo'lmaydi!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'O\'chirish',
+          cancelButtonText: 'Bekor qilish'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // `floorId` ni JSON formatida yuborish
+            handleAjaxRequest(`/api/delete-floor/`, 'POST', { floor_id: floorId }, function (response) {
+              if (response.status === 'success') {
+                Swal.fire(
+                  'O\'chirildi!',
+                  'Qavat muvaffaqiyatli o\'chirildi.',
+                  'success'
+                );
+                loadBuildingFloorData(); // Jadvalni yangilash
+              } else {
+                Swal.fire(
+                  'Xatolik!',
+                  response.message,
+                  'error'
+                );
+              }
             });
           }
         });
+      }
+
+      // Bino saqlash funksiyasi (qayta aniqlangan)
+      function handleSaveBuilding() {
+        const buildingData = {
+          dormitory: $('#dormitorySelect').val(),
+          name: $('#buildingName').val(),
+          description: $('#buildingDescription').val(),
+          is_active: $('#isActive').is(':checked'),
+          user_id: "{{ request.user.id }}"
+        };
+
+        if (!buildingData.dormitory || !buildingData.name) {
+          showToast('Iltimos, barcha maydonlarni to\'ldiring.', 'Ogohlantirish!', 'warning');
+          return;
+        }
+
+        handleAjaxRequest('/api/add-buildings/', 'POST', buildingData, function () {
+          showToast('Bino muvaffaqiyatli qo\'shildi!', 'Muvaffaqiyat!', 'success');
+          loadBuildingFloorData();
+          $('#modalCenter').modal('hide');
+          $('#buildingForm')[0].reset();
+        });
+      }
+
+      // Hodisalarni biriktirish
+      $(document).on('click', '.add-floor-btn', function () {
+        handleAddFloor($(this).data('building-id'));
       });
 
-      // Yangi yozuv qo'shish formasi yuborilganda
-      $('#form-add-new-record').submit(function(e) {
-        e.preventDefault();
-        let formData = $(this).serialize();
-        handleAjaxRequest('/api/add-dormitory-address/', 'POST', formData, function(response) {
-          table.ajax.reload(null, false); // Jadvalni yangilash
-          showToast('Yangi yotoqxona manzili muvaffaqiyatli qo\'shildi!', 'Success', 'success');
-          $('#add-new-record').offcanvas('hide'); // Formani yopish
-        }, function(xhr) {
-          showToast('Xatolik yuz berdi!', 'Error', 'error');
-        });
+      $(document).on('click', '.delete-floor-btn', function () {
+        const floorId = $(this).data('floor-id');
+        console.log("Floor id: "+floorId)
+        deleteFloor(floorId);
       });
+
+      $('#saveBuildingBtn').on('click', handleSaveBuilding);
+
+      // Dastlabki yuklash
+      loadBuildingFloorData();
     });
   </script>
 
 
+
+
+
+
+
+
 {% endblock content %}
+

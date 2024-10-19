@@ -40,7 +40,7 @@
     },
     {
       "name": " TTJ",
-      "icon": "location-icon tf-icons ti ti-location",
+      "icon": "location-icon tf-icons ti ti-building-arch",
       "slug": [
         "TTJ",
         "TTJies"
@@ -48,21 +48,21 @@
       "submenu": [
         {
           "url": "e-manzil-dormitory",
-          "name": " TTJ ro'yhati",
-          "icon": "menu-icon tf-icons ti ti-adjustments-alt",
+          "name": "TTJ ro'yhati",
+          "icon": "menu-icon tf-icons ti ti-building",
           "slug": "e-manzil-dormitory"
 
         },
         {
           "url": "e-manzil-building",
           "name": " Bino",
-          "icon": "home-star-icon tf-icons ti ti-home-star",
+          "icon": "menu-icon tf-icons ti ti-home-star",
           "slug": "e-manzil-building"
         },
         {
           "url": "e-manzil-rooms",
           "name": " Hona",
-          "icon": "home-star-icon tf-icons ti ti-door",
+          "icon": "menu-icon tf-icons ti ti-door",
           "slug": "e-manzil-rooms"
         }
       ]

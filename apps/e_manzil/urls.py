@@ -14,4 +14,9 @@ urlpatterns = [
         login_required(E_manzilView.as_view(template_name="building.html")),
         name="e-manzil-building",
     ),
+    path(
+        "rooms/",
+        login_required(E_manzilView.as_view(template_name="rooms.html")),
+        name="e-manzil-rooms",
+    ),
 ]

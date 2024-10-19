@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework import serializers
 
 from accounts.models import CustomUser
 from api.serializers import DormitoryAddressSerializer, BuildingSerializer, FloorSerializer, \
@@ -64,6 +65,7 @@ class DormitoryAddressDeleteView(View):
         address.delete()
         return JsonResponse({'message': 'Yotoqxona manzili muvaffaqiyatli o‘chirildi!'}, status=204)
 
+
 # Binolar qo'shish uchun API view
 @method_decorator(permission_classes([IsAuthenticated]), name='dispatch')
 class AddBuildingView(generics.CreateAPIView):
@@ -71,9 +73,44 @@ class AddBuildingView(generics.CreateAPIView):
     serializer_class = BuildingSerializer
 
     def perform_create(self, serializer):
+        # Bino tegishli bo'lgan yotoqxonani olish
         dormitory = get_object_or_404(DormitoryAddress, id=self.request.data.get('dormitory'))
+
+        # Foydalanuvchini olish
         user = CustomUser.objects.filter(id=self.request.data.get('user_id')).first()
+
+        # Binoning nomini tekshirish
+        building_name = self.request.data.get('name')
+
+        # Agar shu yotoqxonaga tegishli va shu nomga ega bino mavjud bo'lsa, xatolik yuzaga keltiradi
+        if Building.objects.filter(dormitory=dormitory, name=building_name).exists():
+            raise serializers.ValidationError({
+                "message": f"'{building_name}' nomli bino allaqachon mavjud. Iltimos, boshqa nom tanlang."
+            })
+
+        # Agar mavjud bo'lmasa, yangi bino yaratish
         serializer.save(dormitory=dormitory, created_by=user, updated_by=user)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                self.perform_create(serializer)
+                return Response({
+                    "status": "success",
+                    "message": "Bino muvaffaqiyatli qo'shildi!"
+                }, status=status.HTTP_201_CREATED)
+            except serializers.ValidationError as e:
+                return Response({
+                    "status": "error",
+                    "message": str(e.detail["message"][0])
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "status": "error",
+            "message": "Xatolik yuz berdi.",
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 # Binoni "o'chirish" uchun API view (is_active ni false qilib qo'yish)
 @method_decorator(csrf_exempt, name='dispatch')

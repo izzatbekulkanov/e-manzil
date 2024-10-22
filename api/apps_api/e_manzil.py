@@ -12,8 +12,12 @@ from rest_framework import serializers
 
 from accounts.models import CustomUser
 from api.serializers import DormitoryAddressSerializer, BuildingSerializer, FloorSerializer, \
-    FloorRoomsWithBuildingAndDormitorySerializer
-from apps.e_manzil.models import DormitoryAddress, Building, Floor
+    FloorRoomsWithBuildingAndDormitorySerializer, RoomSerializer
+from apps.e_manzil.models import DormitoryAddress, Building, Floor, Room
+
+
+# OopCompanion:suppressRename
+
 
 # Yotoqxona manzillari ro'yxatini olish va qo'shish
 @method_decorator(permission_classes([IsAuthenticated]), name='dispatch')
@@ -227,3 +231,44 @@ class FloorRoomsView(generics.GenericAPIView):
         serializer = self.get_serializer(floor)
         return Response(serializer.data)
 
+
+@method_decorator(permission_classes([IsAuthenticated]), name='dispatch')
+class AddRoomView(generics.CreateAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+
+        # Qavatni olish
+        floor = get_object_or_404(Floor, id=data.get('floor_id'))
+
+        # Xona raqamini va sig'imini olish
+        number = data.get('number')
+        capacity = data.get('capacity')
+
+        # Mavjud xona raqami tekshiruvi
+        if Room.objects.filter(floor=floor, number=number).exists():
+            return Response({
+                "status": "error",
+                "message": "Xona raqami mavjud",
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Yangi xona ma'lumotlarini tayyorlash
+        data.update({'floor': floor.id, 'created_by': request.user.id, 'updated_by': request.user.id})
+
+        # Serializerni chaqirish va tekshirish
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response({
+                "status": "success",
+                "message": "Xona muvaffaqiyatli qo'shildi!",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+
+        return Response({
+            "status": "error",
+            "message": "Tekshirish muvaffaqiyatsiz bo'ldi",
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)

@@ -65,26 +65,37 @@ class Floor(models.Model):
         return f"Qavat {self.number} - {self.building.name}"  # Ob'ektni chiqarishda qavat va bino nomini qaytaradi
 
 
-# Qavatlarga tegishli xonalarni saqlash uchun model
 class Room(models.Model):
-    floor = models.ForeignKey(Floor, on_delete=models.CASCADE, related_name='rooms', verbose_name="Qavatga bog'langan xona")  # Xona tegishli bo'lgan qavat
-    number = models.CharField(max_length=10, verbose_name="Xona raqami")  # Xona raqami (masalan, 101, 102...)
-    capacity = models.PositiveIntegerField(verbose_name="Xonadagi talabalar sig‘imi")  # Xonaning sig'imi (nechta talaba sig'ishi mumkin)
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yaratuvchi vaqt")  # Yaratilgan vaqt
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Yangilangan vaqt")  # Yangilangan vaqt
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='room_created', verbose_name="Yaratuvchi")  # Yaratuvchi foydalanuvchi
-    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='room_updated', verbose_name="Yangilovchi")  # Yangilovchi foydalanuvchi
-    is_active = models.BooleanField(default=True, verbose_name="Faol yoki nofaol")  # Faol yoki nofaol holati
+    floor = models.ForeignKey(Floor, on_delete=models.CASCADE, related_name='rooms',
+                              verbose_name="Qavatga bog'langan xona")
+    number = models.CharField(max_length=10, verbose_name="Xona raqami")
+    capacity = models.PositiveIntegerField(verbose_name="Xonadagi talabalar sig‘imi")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yaratuvchi vaqt")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Yangilangan vaqt")
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='room_created',
+                                   verbose_name="Yaratuvchi")
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='room_updated',
+                                   verbose_name="Yangilovchi")
+    is_active = models.BooleanField(default=True, verbose_name="Faol yoki nofaol")
 
-    # Talabalar yoki hodimlarni bog'lash uchun maydon
-    occupants = models.ManyToManyField(CustomUser, blank=True, related_name='assigned_rooms', verbose_name="Xonadagi talaba yoki hodimlar") #`CustomUser` modelidan foydalanuvchilarni (talabalar yoki hodimlar) bog'lash uchun
+    # ManyToManyField for occupants
+    occupants = models.ManyToManyField(CustomUser, blank=True, related_name='assigned_rooms',
+                                       verbose_name="Xonadagi talaba yoki hodimlar")
 
     class Meta:
         verbose_name = "Xona"
         verbose_name_plural = "Xonalar"
-        ordering = ['number']  # Xonalar raqam bo'yicha tartiblanadi
+        ordering = ['number']
 
     def __str__(self):
-        return f"Xona {self.number} - Qavat {self.floor.number}"  # Ob'ektni chiqarishda xona va qavatni qaytaradi
+        return f"Xona {self.number} - Qavat {self.floor.number}"
+
+    # Xonadagi talaba/hodimlar sonini hisoblaydigan metod
+    def get_occupants_count(self):
+        return self.occupants.count()
+
+    # Xonaning bo'sh yoki to'lganligini qaytaruvchi metod
+    def is_full(self):
+        return self.get_occupants_count() >= self.capacity
 
 

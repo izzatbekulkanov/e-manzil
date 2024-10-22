@@ -2,6 +2,9 @@ from rest_framework import serializers
 from apps.e_manzil.models import DormitoryAddress, Building, Floor, Room
 
 
+# OopCompanion:suppressRename
+
+
 class DormitoryAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = DormitoryAddress
@@ -23,7 +26,7 @@ class FloorSerializer(serializers.ModelSerializer):
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ['id', 'number', 'capacity']
+        fields = ['id', 'number', 'capacity', 'floor', 'created_by', 'updated_by']
 
 class FloorRoomsWithBuildingAndDormitorySerializer(serializers.ModelSerializer):
     rooms = RoomSerializer(many=True)
